@@ -1,13 +1,28 @@
-# TODO: Choose appropriate Python base image
+# Dockerfile (place in project root)
 FROM python:3.10-slim
+
+
+# avoid python writing .pyc files
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY requirements.txt .
+# system deps (minimal)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir -r requirements.txt
+# copy requirements and install
+COPY requirements.txt /app/requirements.txt
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY . .
+# copy project files (including models/ and app.py)
+COPY . /app
 
-# TODO: Correctly expose and run FastAPI app with uvicorn
+# expose port
+EXPOSE 8000
+
+# run the application with uvicorn
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
