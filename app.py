@@ -3,36 +3,29 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import pandas as pd
+from typing import Dict, Any
 
-# Load trained model from models/model.pkl
+# load the trained model (models/model.pkl)
+# ensure models/model.pkl exists in repo or built image
 model = joblib.load("models/model.pkl")
 
 app = FastAPI(title="MLOps Capstone API")
 
 
 class Features(BaseModel):
-    """Request body for prediction endpoint."""
-    features: dict
+    """Expected body: {"features": {"area": 1200}}"""
+    features: Dict[str, Any]
 
 
 @app.get("/")
 def read_root():
-    """Simple root endpoint to verify the API is running."""
     return {"message": "MLOps Capstone API is running!"}
 
 
 @app.post("/predict")
 def predict(body: Features):
-    """Predict endpoint expects JSON like: {"features": {"area": 1200}}.
-
-    Returns:
-        dict: {"prediction": [value]}
-    """
-    # convert to DataFrame (keeps same interface if you later add more features)
+    # Convert input dict to a single-row DataFrame to preserve column order
     df = pd.DataFrame([body.features])
-
-    # keep each call short so flake8 line length is not exceeded
     preds = model.predict(df)
-
-    # convert numpy scalar/array to Python list for JSON serialization
+    # convert to Python list for JSON serialization
     return {"prediction": preds.tolist()}
