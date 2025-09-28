@@ -1,5 +1,12 @@
+# .dockerignore
+.venv
+__pycache__
+.git
+.gitignore
+.dvc
+.dvc/cache
+models
+mlruns
 *.pyc
-__pycache__/
+.vscode
 .env
-.venv/
-mlruns/
