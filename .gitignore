@@ -1,12 +1,44 @@
-# .dockerignore
-.venv
-__pycache__
-.git
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# DVC (ignore only cache, but keep .dvc tracked)
+.dvc/cache/
+!.dvc
+
+# MLflow runs
+mlruns/
+mlruns/*
+
+# Data & model artifacts
+*.pkl
+*.csv
+*.parquet
+
+# Logs & temp
+*.log
+*.tmp
+*.swp
+
+# Node / frontend
+node_modules/
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# Git
 .gitignore
-.dvc
-.dvc/cache
-models
-mlruns
-*.pyc
-.vscode
-.env
+
+# OS
+.DS_Store
+Thumbs.db
